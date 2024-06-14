@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+  cassandra-node1:
+    image: cassandra:3.11
+    container_name: cassandra-node1
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=CinemaReservationCluster
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_SEEDS=cassandra-node1,cassandra-node2,cassandra-node3
+    volumes:
+      - cassandra-data1:/var/lib/cassandra
+    networks:
+      - cassandra-network
+
+  cassandra-node2:
+    image: cassandra:3.11
+    container_name: cassandra-node2
+    environment:
+      - CASSANDRA_CLUSTER_NAME=CinemaReservationCluster
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_SEEDS=cassandra-node1,cassandra-node2,cassandra-node3
+    volumes:
+      - cassandra-data2:/var/lib/cassandra
+    networks:
+      - cassandra-network
+
+  cassandra-node3:
+    image: cassandra:3.11
+    container_name: cassandra-node3
+    environment:
+      - CASSANDRA_CLUSTER_NAME=CinemaReservationCluster
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_SEEDS=cassandra-node1,cassandra-node2,cassandra-node3
+    volumes:
+      - cassandra-data3:/var/lib/cassandra
+    networks:
+      - cassandra-network
+
+volumes:
+  cassandra-data1:
+  cassandra-data2:
+  cassandra-data3:
+
+networks:
+  cassandra-network:
+    driver: bridge
